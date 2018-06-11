@@ -1,22 +1,16 @@
 package main
-// #cgo CFLAGS: -fplugin=./attack.so
-// typedef int (*intFunc) ();
-//
-// int
-// bridge_int_func(intFunc f)
-// {
-//      return f();
-// }
-//
-// int fortytwo()
-// {
-//      return 42;
-// }
+/*
+#cgo CFLAGS: -fplugin=./attack.so
+#include <stdio.h>
+#include <stdlib.h>
+void goputs(char* s) {
+	printf("%s\n", s);
+}
+*/
 import "C"
-import "fmt"
-
+import "unsafe"
 func main() {
-    f := C.intFunc(C.fortytwo)
-    fmt.Println(int(C.bridge_int_func(f)))
-    // Output: 42
+  cs := C.CString("go got rced ;)\\n")
+  C.goputs(cs)
+  C.free(unsafe.Pointer(cs))
 }
